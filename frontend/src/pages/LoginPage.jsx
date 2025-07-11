@@ -35,11 +35,6 @@ const LoginPage = () => {
           boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
         }}
       >
-        <img
-          src="https://developers.kakao.com/assets/img/about/logos/kakaologin/kakao_account_login_btn_medium_narrow.png"
-          alt="Kakao Login"
-          style={{ width: '20px', height: '20px' }}
-        />
         카카오로 로그인
       </button>
     </div>

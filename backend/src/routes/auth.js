@@ -1,5 +1,5 @@
 import express from 'express';
-import { kakaoLogin } from '../controllers/authController.js';
+import { kakaoLogin, checkAuthStatus, logout } from '../controllers/authController.js';
 
 const router = express.Router();
 
@@ -17,5 +17,11 @@ router.get('/kakao/callback', (req, res) => {
   kakaoLogin(code, res);
 });
 
+
+// GET /api/auth/status
+router.get('/status', checkAuthStatus);
+
+// POST /api/auth/logout
+router.post('/logout', logout);
 
 export default router;

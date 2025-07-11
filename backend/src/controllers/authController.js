@@ -46,9 +46,37 @@ export const kakaoLogin = async (code, res) => {
 
     // 5) 토큰 전달 (쿠키·JSON 중 선택)
     res.cookie('token', token, { httpOnly: true });
-    return res.redirect(process.env.FRONTEND_URL);
+    return res.redirect('http://localhost:5173/');
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: 'Kakao login failed' });
   }
+};
+
+export const checkAuthStatus = async (req, res) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.set('Pragma', 'no-cache');
+  res.set('Expires', '0');
+  res.set('Surrogate-Control', 'no-store');
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).json({ isLoggedIn: false });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id).select('-password'); // 비밀번호 필드는 제외
+    if (!user) {
+      return res.status(401).json({ isLoggedIn: false });
+    }
+    return res.status(200).json({ isLoggedIn: true, user: { id: user._id, kakaoId: user.kakaoId } }); // 필요한 사용자 정보만 전달
+  } catch (err) {
+    console.error('JWT verification failed:', err);
+    return res.status(401).json({ isLoggedIn: false });
+  }
+};
+
+export const logout = (req, res) => {
+  res.clearCookie('token');
+  return res.status(200).json({ message: 'Logged out successfully' });
 };

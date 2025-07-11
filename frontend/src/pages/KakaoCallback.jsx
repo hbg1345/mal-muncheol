@@ -1,10 +1,12 @@
 
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const KakaoCallback = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -13,19 +15,17 @@ const KakaoCallback = () => {
     if (code) {
       console.log('카카오 인가 코드:', code);
       // 백엔드에 인가 코드를 보내 로그인 처리를 요청합니다.
-      fetch(`http://localhost:4000/api/auth/kakao/callback?code=${code}`)
+      fetch(`/api/auth/kakao/callback?code=${code}`)
         .then(response => {
           if (!response.ok) {
             // 서버에서 에러 응답이 온 경우 (e.g., 4xx, 5xx)
             throw new Error('Backend server responded with an error.');
           }
-          // 백엔드가 성공적으로 리다이렉트하면, 브라우저는 그 주소로 이동합니다.
-          // 별도의 JSON 응답을 기대하는 경우, .then(res => res.json()) 등을 사용합니다.
-          // 현재 백엔드는 쿠키를 설정하고 프론트엔드 URL로 리다이렉트하므로,
-          // 이 fetch 요청 후 브라우저가 자동으로 메인 페이지로 이동하게 됩니다.
-          // 성공적으로 리다이렉트 되었는지 확인하기 위해 현재 페이지를 유지하지 않고,
-          // 백엔드의 리다이렉션을 기다립니다.
-          console.log('Backend process initiated. Waiting for redirect...');
+          return response.json(); // JSON 응답 파싱
+        })
+        .then(data => {
+          console.log('Login successful:', data);
+          login(data.user); // AuthContext의 login 함수 호출 (사용자 정보가 있다면 data.user 전달)
         })
         .catch(error => {
           console.error('백엔드 통신 오류:', error);

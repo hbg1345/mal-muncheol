@@ -4,6 +4,7 @@ import cors      from 'cors';
 import dotenv    from 'dotenv';
 import connectDB from './config/db.js';
 import authRouter from './routes/auth.js';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ const app = express();
 // 2) 미들웨어 설정
 app.use(cors());
 app.use(express.json());  // JSON 바디 파싱
+app.use(cookieParser());
 
 // 3) 헬스체크(기본) 라우트
 app.get('/', (req, res) => {
