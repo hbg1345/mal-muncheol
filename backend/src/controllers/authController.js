@@ -24,7 +24,9 @@ export const kakaoLogin = async (code, res) => {
       'https://kapi.kakao.com/v2/user/me',
       { headers: { Authorization: `Bearer ${access_token}` } }
     );
-    const id = profileRes.data.id;
+    const { id, kakao_account } = profileRes.data;
+    // 이메일은 선택 동의 항목이므로, 없는 경우를 대비하여 처리합니다.
+    const email = kakao_account?.email || `${id}@kakao.com`;
 
     // 3) DB에 사용자 upsert (있으면 조회, 없으면 생성)
     let user = await User.findOne({ kakaoId: id });
