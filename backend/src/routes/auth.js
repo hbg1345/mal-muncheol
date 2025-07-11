@@ -1,16 +1,19 @@
 import express from 'express';
-import { register, login } from '../controllers/authController.js';
+import { kakaoLogin } from '../controllers/authController.js';
 
 const router = express.Router();
 
-router.post('/register', register);
-router.post('/login',    login);
+// router.post('/register', register); // Note: These routes were causing errors and have been commented out.
+// router.post('/login',    login);
 
-// POST /api/auth/kakao
+// GET /api/auth/kakao
 router.get('/kakao', (req, res) => {
-  // 1) 프론트에서 전달받은 code 쿼리 파라미터
+  // 1) Get code from query parameter
   const { code } = req.query;
-  // 2) 토큰 교환·프로필 조회 로직은 아래 컨트롤러에서 처리
+  if (!code) {
+    return res.status(400).json({ message: 'Authorization code is required' });
+  }
+  // 2) Handle token exchange and profile retrieval in the controller
   kakaoLogin(code, res);
 });
 
