@@ -7,7 +7,7 @@ const router = express.Router();
 // router.post('/login',    login);
 
 // GET /api/auth/kakao
-router.get('/kakao', (req, res) => {
+router.get('/kakao/callback', (req, res) => {
   // 1) Get code from query parameter
   const { code } = req.query;
   if (!code) {

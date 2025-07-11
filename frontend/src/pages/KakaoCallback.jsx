@@ -12,29 +12,26 @@ const KakaoCallback = () => {
 
     if (code) {
       console.log('카카오 인가 코드:', code);
-      // TODO: 이 코드를 백엔드 서버로 전송하여 로그인 처리를 요청합니다.
-      // 예시: fetch('YOUR_BACKEND_LOGIN_API_ENDPOINT', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({ code: code }),
-      // })
-      // .then(response => response.json())
-      // .then(data => {
-      //   console.log('백엔드 응답:', data);
-      //   // 백엔드에서 받은 토큰 등을 저장하고 메인 페이지로 리다이렉트
-      //   navigate('/');
-      // })
-      // .catch(error => {
-      //   console.error('백엔드 통신 오류:', error);
-      //   // 오류 처리
-      //   navigate('/login');
-      // });
-
-      // 임시로 코드 확인 후 홈으로 리다이렉트 (실제 구현 시 위 주석 해제)
-      alert(`카카오 인가 코드: ${code}\n백엔드로 전송 예정`);
-      navigate('/'); // 예시: 로그인 성공 후 메인 페이지로 이동
+      // 이 코드를 백엔드 서버로 전송하여 로그인 처리를 요청합니다.
+      fetch('http://localhost:4000/api/auth/kakao/callback', {
+        method: 'GET', // 카카오 로그인 라우트가 GET 요청을 받으므로 GET으로 변경
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // GET 요청이므로 body는 필요 없습니다. 코드는 쿼리 파라미터로 전달됩니다.
+        // body: JSON.stringify({ code: code }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('백엔드 응답:', data);
+        // 백엔드에서 받은 토큰 등을 저장하고 메인 페이지로 리다이렉트
+        navigate('/');
+      })
+      .catch(error => {
+        console.error('백엔드 통신 오류:', error);
+        // 오류 처리
+        navigate('/login');
+      });
 
     } else {
       console.error('카카오 인가 코드를 받지 못했습니다.');
