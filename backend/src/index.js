@@ -4,6 +4,7 @@ import cors      from 'cors';
 import dotenv    from 'dotenv';
 import connectDB from './config/db.js';
 import authRouter from './routes/auth.js';
+import chatRoomRouter from './routes/chatRoom.js';
 import cookieParser from 'cookie-parser';
 
 dotenv.config();
@@ -26,7 +27,10 @@ app.get('/', (req, res) => {
 // 4) 인증 관련 라우트 연결
 app.use('/api/auth', authRouter);
 
-// 5) 포트 설정 및 서버 시작
+// 5) 채팅방 관련 라우트 연결
+app.use('/api/chatrooms', chatRoomRouter);
+
+// 6) 포트 설정 및 서버 시작
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`🚀 Server listening on http://localhost:${PORT}`);

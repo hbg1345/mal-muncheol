@@ -2,8 +2,7 @@ import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
   kakaoId: { type: String, unique: true, index: true },
-  email:   String,
-  // 필요시 username, profileImage 등 추가
+  // 이메일은 카카오에서 제공하지 않으므로 제거
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
